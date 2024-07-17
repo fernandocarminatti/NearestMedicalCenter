@@ -1,12 +1,16 @@
 package com.nearestmedicalcenter.NearestMedicalCenter.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "application_users")
-public class ApplicationUser{
+public class ApplicationUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +26,17 @@ public class ApplicationUser{
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "roles")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public ApplicationUser(){}
+    public ApplicationUser(){
+        super();
+        this.roles = new HashSet<Role>();
+    }
 
     public ApplicationUser(String username, String email, String password, Set<Role> roles) {
         this.username = username;
@@ -59,11 +65,46 @@ public class ApplicationUser{
         return roles;
     }
 
-    public void setUserEmail(String email) {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setUserPassword(String password) {
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+
+    public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
 }

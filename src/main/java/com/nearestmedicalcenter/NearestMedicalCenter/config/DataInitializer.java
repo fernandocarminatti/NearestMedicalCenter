@@ -28,14 +28,14 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if(applicationUserRepository.findByUsername("admin").isPresent() && roleRepository.findByRoleName("ADMIN").isPresent()){
+        if(applicationUserRepository.findByUsername("admin").isPresent()){
             return;
         }
 
-        Role adminRole = roleRepository.save(new Role("ADMIN"));
-        Role managerRole = roleRepository.save(new Role("MANAGER"));
-        Role associateRole = roleRepository.save(new Role("ASSOCIATE_MANAGER"));
-        Role newsRole = roleRepository.save(new Role("NEWS_MANAGER"));
+        Role adminRole = roleRepository.save(new Role(Role.RoleName.ADMIN));
+        Role managerRole = roleRepository.save(new Role(Role.RoleName.MANAGER));
+        Role associateRole = roleRepository.save(new Role(Role.RoleName.ASSOCIATE_MANAGER));
+        Role newsRole = roleRepository.save(new Role(Role.RoleName.NEWS_MANAGER));
 
         ApplicationUser adminUser = applicationUserRepository.save(
                 new ApplicationUser("admin",

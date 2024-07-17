@@ -1,11 +1,10 @@
 package com.nearestmedicalcenter.NearestMedicalCenter.controller;
 
-import com.nearestmedicalcenter.NearestMedicalCenter.model.ApplicationUserRegistrationDto;
+import com.nearestmedicalcenter.NearestMedicalCenter.model.ApplicationUser;
+import com.nearestmedicalcenter.NearestMedicalCenter.model.dtos.ApplicationUserRegistrationDto;
 import com.nearestmedicalcenter.NearestMedicalCenter.service.ApplicationUserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/application-users")
@@ -17,9 +16,13 @@ public class ApplicationUserController {
         this.applicationUserService = applicationUserService;
     }
 
+    @GetMapping()
+    public ResponseEntity<Iterable<ApplicationUser>> getApplicationUsers() {
+        return ResponseEntity.ok(applicationUserService.getApplicationUsers());
+    }
+
     @PostMapping()
     public void createApplicationUser(@RequestBody ApplicationUserRegistrationDto applicationUserRegistrationDto) {
-        System.out.println("Controller -> applicationUserRegistrationDto = " + applicationUserRegistrationDto);
         applicationUserService.createApplicationUser(applicationUserRegistrationDto);
 
     }
