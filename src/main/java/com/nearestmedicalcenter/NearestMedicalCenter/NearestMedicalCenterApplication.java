@@ -9,5 +9,4 @@ public class NearestMedicalCenterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NearestMedicalCenterApplication.class, args);
 	}
-
 }
